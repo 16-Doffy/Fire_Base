@@ -6,9 +6,9 @@ function App() {
  
 
   return (
-  <>
-    <FireBase/>
-  </>
+  <div>
+    <FireBase />
+  </div>
   )
 }
 
