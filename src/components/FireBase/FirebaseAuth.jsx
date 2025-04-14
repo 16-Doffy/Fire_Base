@@ -4,6 +4,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   getAuth,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { auth } from "./Firebase-config";
 
@@ -14,7 +15,9 @@ const FirebaseAuth = () => {
   });
 
   const [userInfor, setUserInfor] = useState(" ");
-
+  onAuthStateChanged(auth, (currentUser) => {
+    setUserInfor(currentUser);
+  });
   const handleInputChange = (e) => {
     setValues({
       ...values,
@@ -25,15 +28,13 @@ const FirebaseAuth = () => {
 
   const handleCreateUser = async (e) => {
     e.preventDefault();
-    const user = await createUserWithEmailAndPassword(
-      auth,
-      values.email,
-      values.password
-    );
-    if (user) setUserInfor(user);
+    await createUserWithEmailAndPassword(auth, values.email, values.password);
+
     console.log("CreateUser-success");
   };
-
+const handleSignOut =()=>{
+    signOut(auth);
+};
   return (
     <div className="w-full max-w-2xl mx-auto bg-white shadow-lg p-5 mb-10">
       <form onSubmit={handleCreateUser}>
@@ -58,6 +59,14 @@ const FirebaseAuth = () => {
           SignUp
         </button>
       </form>
+      <div className="mt-10 flex items-center gap-x-5">
+        <span>{userInfor?.email}</span>
+        <button className="p-5 bg-purple-500 text-white text-sm font-medium rounded-lg "
+        onClick={handleSignOut}
+        >
+          SignOut
+        </button>
+      </div>
     </div>
   );
 };
