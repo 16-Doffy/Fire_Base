@@ -8,6 +8,10 @@ import {
   onSnapshot,
   serverTimestamp,
   updateDoc,
+  where,
+  orderBy,
+  limit,
+  query,
 } from "firebase/firestore";
 
 
@@ -18,6 +22,7 @@ const FireBase = () => {
   const [postId, setPostId] = useState("");
   const [message, setMessage] = useState("");
   const [posts, setPosts] = useState([]);
+  const [singlePost, setSinglePost] = useState("");
   // Lấy dữ liệu ban đầu
   useEffect(() => {
     //     getDocs(colRef)
@@ -44,8 +49,16 @@ const FireBase = () => {
           ...doc.data(),
         });
       });
-       
+
       setPosts(posts);
+    });
+
+    const docRefSingle = doc(db, "posts", "aIJMqK73Zxef8ETO3G7N");
+    // getDoc(docRefSingle).then((doc) => {
+    //   console.log(doc.id, doc.data());
+    // }); if wanna use noraml !== real time = snapshot
+    onSnapshot(docRefSingle, (doc) => {
+      console.log(doc.id, doc.data());
     });
   }, []);
   console.log("All posts:", posts);
@@ -55,7 +68,7 @@ const FireBase = () => {
     addDoc(colRef, {
       title,
       author,
-      createdAt:serverTimestamp()
+      createdAt: serverTimestamp(),
     })
       .then(() => {
         setMessage("✅ Thêm bài viết thành công!");
@@ -79,16 +92,28 @@ const FireBase = () => {
       setMessage("❌ Xóa thất bại: " + err.message);
     }
   };
-// update & add time
-  const handleUpdatePost = async(e) =>{
+  const q = query(colRef,where("author","==","Doffy"),  limit(1));
+  onSnapshot(q, (snapshot) => {
+    let posts = [];
+    snapshot.docs.forEach((doc) => {
+      posts.push ({
+        id: doc.id,
+        ...doc.data(),
+      });
+    });
+    console.log(posts);
+  })
+  // update & add time
+  const handleUpdatePost = async (e) => {
     e.preventDefault();
     const colRefUpdatePost = doc(db, "posts", postId);
-    await updateDoc (colRefUpdatePost,{
-        title,
-        author,
+    await updateDoc(colRefUpdatePost, {
+      title,
+      author,
     });
-    console.log("update success")
-  }
+    console.log("update success");
+  };
+
 
   return (
     <div className=" grid grid-cols-3 grid-rows-2 gap-2 bg-sky-950 w-300 h-200 m-3 p-3">
@@ -98,8 +123,8 @@ const FireBase = () => {
           {message}
         </div>
       )}
-{/* Form thêm bài viết */}
-<div className="w-full max-w-2xl mx-auto bg-white shadow-lg p-5 mb-10">
+      {/* Form thêm bài viết */}
+      <div className="w-full max-w-2xl mx-auto bg-white shadow-lg p-5 mb-10">
         <form onSubmit={handleAddPost}>
           <input
             type="text"
@@ -121,10 +146,11 @@ const FireBase = () => {
             type="submit"
             className="p-5 bg-blue-500 text-white text-sm font-medium rounded-lg w-full"
           >
-            Submit
+            Add Post
           </button>
         </form>
       </div>
+
       {/* Form update bài viết */}
       <div className="w-full max-w-2xl mx-auto bg-white shadow-lg p-5 mb-10">
         <form onSubmit={handleUpdatePost}>
@@ -179,12 +205,12 @@ const FireBase = () => {
           posts.map((item) => (
             <div key={item.id}>
               <div>
-                {item.title} - {item.author} 
+                {item.title} - {item.author}
               </div>
             </div>
           ))}
       </div>
-          {/* update and show timeline */}
+      {/* update and show timeline */}
     </div>
   );
 };
