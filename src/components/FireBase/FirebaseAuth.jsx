@@ -5,8 +5,10 @@ import {
   signOut,
   getAuth,
   onAuthStateChanged,
+  updateProfile,
 } from "firebase/auth";
-import { auth } from "./Firebase-config";
+import { auth, db } from "./Firebase-config";
+import { addDoc, collection } from "firebase/firestore";
 
 const FirebaseAuth = () => {
   const [values, setValues] = useState({
@@ -16,7 +18,11 @@ const FirebaseAuth = () => {
 
   const [userInfor, setUserInfor] = useState(" ");
   onAuthStateChanged(auth, (currentUser) => {
-    setUserInfor(currentUser);
+    if (currentUser) {
+      setUserInfor(currentUser);
+    } else {
+      setUserInfor("");
+    }
   });
   const handleInputChange = (e) => {
     setValues({
@@ -28,13 +34,32 @@ const FirebaseAuth = () => {
 
   const handleCreateUser = async (e) => {
     e.preventDefault();
-    await createUserWithEmailAndPassword(auth, values.email, values.password);
+    try {
+      const user = await createUserWithEmailAndPassword(
+        auth,
+        values.email,
+        values.password
+      );
 
-    console.log("CreateUser-success");
+      await updateProfile(auth.currentUser, {
+        displayName: "Nhut Duy",
+      });
+      setUserInfor(user);
+      console.log("profile-success");
+      const userRef = collection(db, "users");
+      await addDoc(userRef, {
+        email: values.email,
+        password: values.password,
+        id: user.user.uid
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
-const handleSignOut =()=>{
+
+  const handleSignOut = () => {
     signOut(auth);
-};
+  };
   return (
     <div className="w-full max-w-2xl mx-auto bg-white shadow-lg p-5 mb-10">
       <form onSubmit={handleCreateUser}>
@@ -60,9 +85,10 @@ const handleSignOut =()=>{
         </button>
       </form>
       <div className="mt-10 flex items-center gap-x-5">
-        <span>{userInfor?.email}</span>
-        <button className="p-5 bg-purple-500 text-white text-sm font-medium rounded-lg "
-        onClick={handleSignOut}
+        <span>{userInfor?.displayName}</span>
+        <button
+          className="p-5 bg-purple-500 text-white text-sm font-medium rounded-lg "
+          onClick={handleSignOut}
         >
           SignOut
         </button>
