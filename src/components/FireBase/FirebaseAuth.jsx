@@ -3,7 +3,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  getAuth,
+
   onAuthStateChanged,
   updateProfile,
 } from "firebase/auth";
@@ -60,7 +60,14 @@ const FirebaseAuth = () => {
   const handleSignOut = () => {
     signOut(auth);
   };
+  const handleLogin =async (e) => {
+    e.preventDefault();
+   const cred = await signInWithEmailAndPassword(auth, values.email, values.password);
+  setUserInfor(cred);
+  console.log("Login success")
+  };
   return (
+    <>
     <div className="w-full max-w-2xl mx-auto bg-white shadow-lg p-5 mb-10">
       <form onSubmit={handleCreateUser}>
         <input
@@ -94,6 +101,29 @@ const FirebaseAuth = () => {
         </button>
       </div>
     </div>
+    <form onSubmit={handleLogin}>
+        <input
+          type="email"
+          className="p-3 border border-gray-200 w-full mb-5 outline-none focus:border-blue-500"
+          placeholder="Enter your Email address"
+          name="email"
+          onChange={handleInputChange}
+        />
+        <input
+          type="password"
+          className="p-3 border border-gray-200 w-full mb-5 outline-none focus:border-blue-500"
+          placeholder="Enter your passsword"
+          name="password"
+          onChange={handleInputChange}
+        />
+        <button
+          type="submit"
+          className="p-5 bg-pink-500 text-white text-sm font-medium rounded-lg w-full"
+        >
+          Loginin
+        </button>
+      </form>
+    </>
   );
 };
 
