@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import Label from "../label/label";
 
 const SignUpPageStyles = styled.div`
   min-height: 100vh;
@@ -23,11 +24,7 @@ const SignUpPageStyles = styled.div`
     align-items: flex-start;
     font-size: 16px;
   }
-  .label {
-    color: #292D32;
-    margin-right: auto;
-    font-weight: bold;
-  }
+
   .inpat {
     width: 100%;
     padding: 20px;
@@ -51,9 +48,9 @@ const SignUpPage = () => {
       <h1 className="heading">Monkey Blogging</h1>
       <form>
         <div className="field">
-          <label htmlFor="Fullname" className="label">
+          <Label htmlFor="Fullname">
             Fullname
-          </label>
+          </Label>
           <input
             type="text"
             id="fullname"

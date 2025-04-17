@@ -10,7 +10,7 @@ function App() {
     <div>
       <AuthProvider>
         <Routes>
-          <Route path="/sign-up" element={<SignUpPage />} />
+          <Route path="/" element={<SignUpPage />} />
         </Routes>
       </AuthProvider>
     </div>
