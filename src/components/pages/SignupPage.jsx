@@ -1,7 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import Label from "../label/label";
-
+import Input from "../Input/input";
+import { useForm } from "react-hook-form";
+import IconEyeClose from "../Icon/IconEyeClose";
+import { Field } from "../Field";
 const SignUpPageStyles = styled.div`
   min-height: 100vh;
   padding: 40px;
@@ -12,7 +15,7 @@ const SignUpPageStyles = styled.div`
   }
   .heading {
     text-align: center;
-    color: #2EBAC1;
+    color: #2ebac1;
     font-weight: bold;
     font-size: 40px;
     margin-bottom: 60px;
@@ -25,7 +28,7 @@ const SignUpPageStyles = styled.div`
     font-size: 16px;
   }
 
-  .inpat {
+  /* .inpat {
     width: 100%;
     padding: 20px;
     background-color: #E7ECF3;
@@ -37,27 +40,61 @@ const SignUpPageStyles = styled.div`
   .inpat:focus {
     background-color: white;
     border-color: #2EBAC1;
-  }
+  } */
 `;
 
-
 const SignUpPage = () => {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid, isSubmitting, watch },
+  } = useForm({});
+  const handleSignUp = (values) => {
+    console.log(values);
+  };
   return (
     <SignUpPageStyles>
       <img src="/img/mk.png" alt="monkey login" className="logo" />
       <h1 className="heading">Monkey Blogging</h1>
-      <form>
-        <div className="field">
-          <Label htmlFor="Fullname">
-            Fullname
-          </Label>
-          <input
+      <form
+        className="form"
+        onSubmit={handleSubmit(handleSignUp)}
+        autoComplete="off"
+      >
+        <Field>
+          <Label htmlFor="Fullname">Fullname</Label>
+          <Input
             type="text"
-            id="fullname"
-            className="inpat"
             placeholder="Enter your fullname"
-          ></input>
-        </div>
+            name="fullname"
+            hasIcon
+            control={control}
+          ></Input>
+        </Field>
+
+        <Field>
+          <Label htmlFor="email">Email</Label>
+          <Input
+            type="text"
+            placeholder="Enter your Email"
+            name="email"
+            hasIcon
+            control={control}
+          ></Input>
+        </Field>
+
+        <Field>
+          <Label htmlFor="password">Password</Label>
+          <Input
+            type="password"
+            placeholder="Enter your password"
+            name="password"
+            hasIcon
+            control={control}
+          >
+            <IconEyeClose className="icon-eye"></IconEyeClose>
+          </Input>
+        </Field>
       </form>
     </SignUpPageStyles>
   );
