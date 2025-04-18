@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Label from "../label/label";
 import Input from "../Input/input";
 import { useForm } from "react-hook-form";
 import IconEyeClose from "../Icon/IconEyeClose";
 import { Field } from "../Field";
+import IconEyeOpen from "../Icon/IconEyeOpen";
 const SignUpPageStyles = styled.div`
   min-height: 100vh;
   padding: 40px;
@@ -52,6 +53,7 @@ const SignUpPage = () => {
   const handleSignUp = (values) => {
     console.log(values);
   };
+  const [togglePassword, setTogglePassword] = useState(false);
   return (
     <SignUpPageStyles>
       <img src="/img/mk.png" alt="monkey login" className="logo" />
@@ -86,13 +88,23 @@ const SignUpPage = () => {
         <Field>
           <Label htmlFor="password">Password</Label>
           <Input
-            type="password"
+            type={togglePassword ? "text" : "password"}
             placeholder="Enter your password"
             name="password"
             hasIcon
             control={control}
           >
-            <IconEyeClose className="icon-eye"></IconEyeClose>
+            {!togglePassword ? (
+              <IconEyeClose
+                className="icon-eye"
+                onClick={() => setTogglePassword(true)}
+              ></IconEyeClose>
+            ) : (
+              <IconEyeOpen
+                className="icon-eye"
+                onClick={() => setTogglePassword(false)}
+              ></IconEyeOpen>
+            )}
           </Input>
         </Field>
       </form>
