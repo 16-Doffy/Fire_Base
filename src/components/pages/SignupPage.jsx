@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Label from "../label/label";
 import Input from "../Input/input";
@@ -8,6 +8,9 @@ import { Field } from "../Field";
 import IconEyeOpen from "../Icon/IconEyeOpen";
 import Buttonn from "../Button/Button";
 import { Spin } from "antd";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { toast } from "react-toastify";
 
 const SignUpPageStyles = styled.div`
   min-height: 100vh;
@@ -32,7 +35,17 @@ const SignUpPageStyles = styled.div`
     font-size: 16px;
   }
 `;
-
+const schema = yup.object({
+  fullname: yup.string().required("pls enter your full nname"),
+  email: yup
+    .string()
+    .email("pls enter your email")
+    .required("pls enter your email address"),
+  password: yup
+    .string()
+    .min(8, "your password must be at least 8 character")
+    .required("pls enter your passwords"),
+});
 const SignUpPage = () => {
   const {
     control,
@@ -40,12 +53,23 @@ const SignUpPage = () => {
     formState: { errors, isValid },
     watch,
     reset,
-  } = useForm({ mode: "onChange" });
+  } = useForm({ mode: "onChange", resolver: yupResolver(schema) });
 
   const [togglePassword, setTogglePassword] = useState(false);
+  useEffect(() => {
+    const arrError = Object.values(errors); //lấy mảng login
+    if(arrError.length > 0){
+      toast.error(arrError[0]?.message,{
+        pauseOnHover:false,
+        delay:0,
+      })
+    }
+  }, [errors]);
+  console.log(errors);
   const [loading, setLoading] = useState(false);
 
   const handleSignUp = async (values) => {
+    
     if (!isValid) return;
     setLoading(true);
     await new Promise((resolve) => {
@@ -72,7 +96,7 @@ const SignUpPage = () => {
             type="text"
             placeholder="Enter your fullname"
             name="fullname"
-            hasIcon
+            
             control={control}
           />
         </Field>
@@ -83,7 +107,7 @@ const SignUpPage = () => {
             type="text"
             placeholder="Enter your Email"
             name="email"
-            hasIcon
+            
             control={control}
           />
         </Field>
