@@ -6,6 +6,9 @@ import { useForm } from "react-hook-form";
 import IconEyeClose from "../Icon/IconEyeClose";
 import { Field } from "../Field";
 import IconEyeOpen from "../Icon/IconEyeOpen";
+import Buttonn from "../Button/Button";
+import { Spin } from "antd";
+
 const SignUpPageStyles = styled.div`
   min-height: 100vh;
   padding: 40px;
@@ -28,32 +31,32 @@ const SignUpPageStyles = styled.div`
     align-items: flex-start;
     font-size: 16px;
   }
-
-  /* .inpat {
-    width: 100%;
-    padding: 20px;
-    background-color: #E7ECF3;
-    border-radius: 8px;
-    font-weight: 500;
-    transition: all 0.2s linear;
-    border: 1px solid transparent;
-  }
-  .inpat:focus {
-    background-color: white;
-    border-color: #2EBAC1;
-  } */
 `;
 
 const SignUpPage = () => {
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid, isSubmitting, watch },
-  } = useForm({});
-  const handleSignUp = (values) => {
-    console.log(values);
-  };
+    formState: { errors, isValid },
+    watch,
+    reset,
+  } = useForm({ mode: "onChange" });
+
   const [togglePassword, setTogglePassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleSignUp = async (values) => {
+    if (!isValid) return;
+    setLoading(true);
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 5000);
+    });
+    setLoading(false);
+    console.log("Đăng ký thành công:", values);
+  };
+
   return (
     <SignUpPageStyles>
       <img src="/img/mk.png" alt="monkey login" className="logo" />
@@ -71,7 +74,7 @@ const SignUpPage = () => {
             name="fullname"
             hasIcon
             control={control}
-          ></Input>
+          />
         </Field>
 
         <Field>
@@ -82,7 +85,7 @@ const SignUpPage = () => {
             name="email"
             hasIcon
             control={control}
-          ></Input>
+          />
         </Field>
 
         <Field>
@@ -98,15 +101,19 @@ const SignUpPage = () => {
               <IconEyeClose
                 className="icon-eye"
                 onClick={() => setTogglePassword(true)}
-              ></IconEyeClose>
+              />
             ) : (
               <IconEyeOpen
                 className="icon-eye"
                 onClick={() => setTogglePassword(false)}
-              ></IconEyeOpen>
+              />
             )}
           </Input>
         </Field>
+
+        <Buttonn type="submit" disabled={loading}>
+          {loading ? <Spin /> : "SignUp"}
+        </Buttonn>
       </form>
     </SignUpPageStyles>
   );
