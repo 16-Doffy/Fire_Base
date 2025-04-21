@@ -11,6 +11,11 @@ import { Spin } from "antd";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth, db } from "../FireBase/Firebase-config";
+import { useNavigate } from "react-router-dom";
+import { addDoc, collection } from "firebase/firestore";
+import PropTypes from 'prop-types';
 
 const SignUpPageStyles = styled.div`
   min-height: 100vh;
@@ -47,6 +52,7 @@ const schema = yup.object({
     .required("pls enter your passwords"),
 });
 const SignUpPage = () => {
+  const navigate = useNavigate();
   const {
     control,
     handleSubmit,
@@ -58,27 +64,44 @@ const SignUpPage = () => {
   const [togglePassword, setTogglePassword] = useState(false);
   useEffect(() => {
     const arrError = Object.values(errors); //lấy mảng login
-    if(arrError.length > 0){
-      toast.error(arrError[0]?.message,{
-        pauseOnHover:false,
-        delay:0,
-      })
+    if (arrError.length > 0) {
+      toast.error(arrError[0]?.message, {
+        pauseOnHover: false,
+        delay: 0,
+      });
     }
   }, [errors]);
   console.log(errors);
   const [loading, setLoading] = useState(false);
 
   const handleSignUp = async (values) => {
-    
     if (!isValid) return;
-    setLoading(true);
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 5000);
+    console.log("value", values);
+    const user = await createUserWithEmailAndPassword(
+      auth,
+      values.email,
+      values.password
+    );
+
+    await updateProfile(auth.currentUser, {
+      displayName: values.fullname,
     });
-    setLoading(false);
-    console.log("Đăng ký thành công:", values);
+    // setLoading(true);
+    // await new Promise((resolve) => {
+    //   setTimeout(() => {
+    //     resolve();
+    //   }, 5000);
+    // });
+    // setLoading(false);
+    // console.log("Đăng ký thành công:", values);
+    const colRef = collection(db, "user");
+    addDoc(colRef, {
+      fullname: values.fullname,
+      email: values.email,
+      password: values.password,
+    });
+    toast.success("Create user successfully");
+    navigate("/");
   };
 
   return (
@@ -96,7 +119,6 @@ const SignUpPage = () => {
             type="text"
             placeholder="Enter your fullname"
             name="fullname"
-            
             control={control}
           />
         </Field>
@@ -107,7 +129,6 @@ const SignUpPage = () => {
             type="text"
             placeholder="Enter your Email"
             name="email"
-            
             control={control}
           />
         </Field>
@@ -134,7 +155,6 @@ const SignUpPage = () => {
             )}
           </Input>
         </Field>
-
         <Buttonn type="submit" disabled={loading}>
           {loading ? <Spin /> : "SignUp"}
         </Buttonn>
@@ -142,5 +162,9 @@ const SignUpPage = () => {
     </SignUpPageStyles>
   );
 };
-
+Buttonn.propTypes = {
+  type:PropTypes.oneOf(["button","submit"]).isRequired,
+  onClick:PropTypes.func,
+  children:PropTypes.node,
+};
 export default SignUpPage;
