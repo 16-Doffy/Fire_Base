@@ -6,13 +6,15 @@ import { AuthProvider } from "./components/contexts/auth-context";
 import SignUpPage from "./components/pages/SignupPage";
 import { ToastContainer } from "react-toastify";
 import SignIn from "./components/pages/SignIn";
+import Homepage from "./components/pages/Homepage";
 
 function App() {
   return (
     <div>
       <AuthProvider>
         <Routes>
-          <Route path="/" element={<SignUpPage />} />
+        <Route path="/" element={<Homepage />} />
+          <Route path="/sign-up" element={<SignUpPage />} />
           <Route path="/sign-in" element={<SignIn />} />
         </Routes>
         <ToastContainer />

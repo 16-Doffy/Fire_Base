@@ -8,6 +8,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
 import IconEyeClose from "../Icon/IconEyeClose";
 import IconEyeOpen from "../Icon/IconEyeOpen";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../FireBase/Firebase-config";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/auth-context";
 
 const schema = yup.object({
   email: yup
@@ -39,11 +43,17 @@ const SignIn = () => {
       });
     }
   }, [errors]);
-
-  const handleSignIn = (value) => {
-  
-
-
+  const navigate = useNavigate();
+  const { userInfo } = useAuth();
+  useEffect(() => {
+    document.title ="Login Page"
+    if (!userInfo || !userInfo.email) navigate("/sign-in");
+    else navigate("/");
+  }, [userInfo, navigate]);
+  const handleSignIn = async (value) => {
+    if (!isValid) return;
+    await signInWithEmailAndPassword(auth, value.email, value.password);
+    navigate("/");
   };
   const [loading, setLoading] = useState(false);
   const [togglePassword, setTogglePassword] = useState(false);
@@ -64,6 +74,7 @@ const SignIn = () => {
                 type="email"
                 placeholder="Enter your email address"
                 {...field}
+                value={field.value || ""} // fix chỗ này
               />
             )}
           />
@@ -72,17 +83,19 @@ const SignIn = () => {
         <Field>
           <label htmlFor="password">Password</label>
           <div style={{ position: "relative" }}>
-            <Controller
-              name="password"
-              control={control}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  type={togglePassword ? "text" : "password"}
-                  placeholder="Enter your password"
-                />
-              )}
-            />
+          <Controller
+  name="password"
+  control={control}
+  render={({ field }) => (
+    <input
+      {...field}
+      type={togglePassword ? "text" : "password"}
+      placeholder="Enter your password"
+      value={field.value || ""}   // fix chỗ này
+    />
+  )}
+/>
+
             {!togglePassword ? (
               <IconEyeClose
                 className="icon-eye"
