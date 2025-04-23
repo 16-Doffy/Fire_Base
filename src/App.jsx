@@ -7,6 +7,7 @@ import SignUpPage from "./components/pages/SignupPage";
 import { ToastContainer } from "react-toastify";
 import SignIn from "./components/pages/SignIn";
 import Homepage from "./components/pages/Homepage";
+import NotFoundPage from "./components/pages/NotFoundPage";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/" element={<Homepage />} />
           <Route path="/sign-up" element={<SignUpPage />} />
           <Route path="/sign-in" element={<SignIn />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
         <ToastContainer />
       </AuthProvider>

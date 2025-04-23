@@ -1,18 +1,19 @@
 import { Button } from "antd";
 import React from "react";
+import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 const menuLink = [
   {
-    url: "/#",
+    url: "/",
     title: "Home",
   },
   {
-    url: "/#",
+    url: "/blog",
     title: "Blog",
   },
   {
-    url: "/#",
+    url: "/contact",
     title: "Contact",
   },
 ];
@@ -68,15 +69,15 @@ const Header = () => {
     <HeaderStyled>
       <div className="container w-full max-w-[1180px] m-auto p-0">
         <div className="header-main">
-          <a href="/">
+          <NavLink to="/">
             <img src="/img/mk.png" alt="monkey login" className="logo" />
-          </a>
+          </NavLink>
           <ul className="menu">
             {menuLink.map((item) => (
               <li className="menu-link" key={item.title}>
-                <a href={item.url} className="menu-link">
+                <NavLink to={item.url} className="menu-link">
                   {item.title}
-                </a>
+                </NavLink>
               </li>
             ))}
           </ul>
@@ -104,7 +105,10 @@ const Header = () => {
               </svg>
             </span>
           </div>
-          <Button className="header-button">Sign Up</Button>
+          <Button className="header-button"
+          
+          
+          >Sign Up</Button>
         </div>
       </div>
     </HeaderStyled>
