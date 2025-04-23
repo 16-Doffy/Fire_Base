@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import Header from '../Layout/Header';
+import HomeBanner from '../module/Home/HomeBanner';
+import Layout from '../Layout/Layout';
 
 
 const HomepageStyle = styled.div`
@@ -12,7 +13,9 @@ const Homepage = () => {
 
     return (
         <HomepageStyle>
-           <Header></Header>
+           <Layout >
+           <HomeBanner></HomeBanner>
+           </Layout>
         </HomepageStyle>
     );
 };

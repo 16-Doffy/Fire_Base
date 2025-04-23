@@ -1,7 +1,9 @@
-import { Button } from "antd";
 import React from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
+import Buttonn from "../Button/Button";
+import { useAuth } from "../contexts/auth-context";
+
 
 const menuLink = [
   {
@@ -18,7 +20,7 @@ const menuLink = [
   },
 ];
 const HeaderStyled = styled.header`
-padding: 15px;
+  padding: 15px;
   .header-main {
     display: flex;
     align-items: center;
@@ -43,6 +45,7 @@ padding: 15px;
     display: flex;
     position: relative;
     align-items: center;
+    margin-right:20px;
   }
   .search-input {
     flex: 1;
@@ -52,19 +55,20 @@ padding: 15px;
     position: absolute;
     transform: translateY(-5%);
     right: 15px;
-    
   }
-  .header-button{
+  .header-button {
     margin-left: 20px;
     width: 200px;
     height: 50px;
-    background-image: linear-gradient(to right,#6dbfb8, #e0f2fe);
+    background-image: linear-gradient(to right, #6dbfb8, #e0f2fe);
     font-size: 16px;
     font-weight: bold;
     color: #2a2f83;
   }
 `;
 const Header = () => {
+  const { userInfor } = useAuth();
+  console.log("put", userInfor);
   return (
     <HeaderStyled>
       <div className="container w-full max-w-[1180px] m-auto p-0">
@@ -81,7 +85,6 @@ const Header = () => {
               </li>
             ))}
           </ul>
-
           <div className="search">
             <input
               type="text"
@@ -105,10 +108,12 @@ const Header = () => {
               </svg>
             </span>
           </div>
-          <Button className="header-button"
-          
-          
-          >Sign Up</Button>
+         {!userInfor ? <Buttonn className="header-button" type="button" to="/sign-in">
+            Sign in
+          </Buttonn> : <div className="header-auth">
+            <strong>Welcome Back</strong>
+            <span className="ml-2">{userInfor?.displayName}Doffy</span>
+          </div>}
         </div>
       </div>
     </HeaderStyled>
