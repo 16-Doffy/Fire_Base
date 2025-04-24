@@ -23,6 +23,9 @@ const HomeBannerStyled = styled.div`
   .banner-desc {
     line-height: 1.75;
     margin-bottom: 40px;
+    font-size: 20px;
+    color:#e0f2fe ;
+    font-weight: 600;
   }
   .GETSTATE{
     color: #4ac17f;
@@ -32,8 +35,8 @@ const HomeBannerStyled = styled.div`
 const HomeBanner = () => {
   return (
     <HomeBannerStyled>
-      <div className="container w-full h-auto">
-        <div className="banner">
+      <div className="container w-full h-auto m-auto  ">
+        <div className="banner ">
           <div className="banner-content">
             <h1 className="banner-heading">Monkey Blogging</h1>
             <p className="banner-desc">
@@ -42,14 +45,14 @@ const HomeBanner = () => {
               deleniti nostrum sed sequi? Consequuntur molestiae officia ea,
               animi ex totam enim illo.
             </p>
-            <div className="GETSTATE w-35 h-10 m-auto bg-white border border-blue-800  p-1 text-xl font-light">
+            <div className="GETSTATE items-center w-30 h-10 m-auto bg-white border border-blue-800  p-1 text-xl font-light">
               <NavLink type="button" to="/sign-in">
                 Get Started
               </NavLink>
             </div>
           </div>
           <div className="banner-img">
-            <img src="/img/banner.jpg" alt="" />
+            <img src= "/img/m2.png" alt="" />
           </div>
         </div>
       </div>
